@@ -207,6 +207,7 @@ int delim = 0;
 int menuload = 0;
 int balancecells;
 int debugdigits = 2; //amount of digits behind decimal for voltage reading
+int invtemp;
 
 int testcount = 0;
 
@@ -3297,6 +3298,11 @@ void canread()
     Rx309();
   }
 
+  if (inMsg.id == 0x299)
+  {
+    invtemp = ((inMsg.buf[1] - 40) + (inMsg.buf[4] - 40))/2;
+  }
+
 
   if (debug == 1)
   {
@@ -3748,7 +3754,7 @@ void dashupdate()
   Serial2.write(0xff);
   Serial2.write(0xff);
   Serial2.print("temp.val=");
-  Serial2.print(bms.getAvgTemperature(), 0);
+  Serial2.print(invtemp, 0);
   Serial2.write(0xff);  // We always have to send this three lines after each command sent to the nextion display.
   Serial2.write(0xff);
   Serial2.write(0xff);
